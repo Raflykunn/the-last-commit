@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import the.last.commit.utils.DatabaseConnection;
 
 public class App extends Application {
     public String getGreeting() {
@@ -16,6 +17,8 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) {
+        DatabaseConnection.initializeDatabase();
+
         Label label = new Label(getGreeting());
         StackPane root = new StackPane(label);
         Scene scene = new Scene(root, 360, 240);
