@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import the.last.commit.models.BossEnemy;
 import the.last.commit.models.Enemy;
 import the.last.commit.models.Hero;
 import the.last.commit.views.LoginRegister;
@@ -80,46 +81,48 @@ public class BattleController {
             return;
         }
 
-        if (target.getName().contains("BOSS") && new Random().nextInt(100) < 40) {
-            view.log("\nImam Voldigoad menangkis serangan! Damage diabaikan (0 Damage).");
-            playAnim(hView, heroAttack, heroIdle);
-            hero.setCurrentResource(hero.getCurrentResource() - cost);
-            startCooldown(type);
-            finishHeroTurn(hView, eView);
-            return;
-        }
-
         hero.setCurrentResource(hero.getCurrentResource() - cost);
         playAnim(hView, heroAttack, heroIdle);
-        if (target.getName().contains("BOSS")) playAnim(eView, bossHit, bossIdle);
-        else playAnim(eView, enemyHit, enemyIdle);
 
-        applyHeroDamage(type, target);
+        int damage = type.equals("ULT") ? hero.getTotalUltAtk() : (type.equals("SKILL") ? hero.getTotalSkillAtk() : hero.getTotalBasicAtk());
+        view.log("\n[HERO] Melancarkan " + type + "!");
+
+        // Berikan damage ke target utama secara enkapsulasi dan polimorfisme
+        boolean isBlocked = target.takeDamage(damage);
+        if (isBlocked) {
+            view.log(target.getName() + " menangkis serangan! Damage diabaikan (0 Damage).");
+        } else {
+            if (target instanceof BossEnemy) playAnim(eView, bossHit, bossIdle);
+            else playAnim(eView, enemyHit, enemyIdle);
+
+            view.log("-> " + target.getName() + " terkena " + damage + " DMG");
+
+            // Berikan damage area (spread) jika bukan serangan BASIC
+            if (!type.equals("BASIC")) {
+                applySpreadDamage(type, target, damage);
+            }
+        }
+
         startCooldown(type);
         finishHeroTurn(hView, eView);
     }
 
-    private void applyHeroDamage(String type, Enemy primary) {
-        List<Enemy> targets = new ArrayList<>();
+    private void applySpreadDamage(String type, Enemy primary, int damage) {
         int center = enemies.indexOf(primary);
+        if (center == -1) return;
+
         boolean isKatagiri = hero.getType().equalsIgnoreCase("katagiri");
+        int spread = type.equals("ULT") ? (isKatagiri ? 8 : 12) : (isKatagiri ? 4 : 5);
+        int half = spread / 2;
+        int start = Math.max(0, center - half);
+        int end = Math.min(enemies.size() - 1, start + spread);
 
-        if (type.equals("BASIC")) {
-            targets.add(primary);
-        } else {
-            int spread = type.equals("ULT") ? (isKatagiri ? 8 : 12) : (isKatagiri ? 4 : 5);
-            int half = spread / 2;
-            int start = Math.max(0, center - half);
-            int end = Math.min(enemies.size() - 1, start + spread);
-            for (int i = start; i <= end; i++) targets.add(enemies.get(i));
-        }
-
-        int damage = type.equals("ULT") ? hero.getTotalUltAtk() : (type.equals("SKILL") ? hero.getTotalSkillAtk() : hero.getTotalBasicAtk());
-        
-        view.log("\n[HERO] Melancarkan " + type + "!");
-        for (Enemy e : targets) {
-            e.setCurrentHp(e.getCurrentHp() - damage);
-            view.log("-> " + e.getName() + " terkena " + damage + " DMG");
+        for (int i = start; i <= end; i++) {
+            Enemy e = enemies.get(i);
+            if (e != primary && !e.isDead()) {
+                e.takeDamage(damage); // Polimorfisme
+                view.log("-> " + e.getName() + " terkena " + damage + " DMG");
+            }
         }
     }
 
@@ -219,7 +222,7 @@ public class BattleController {
             case 2: add(l, "Slime", 5, 120, 35); add(l, "Goblin", 10, 180, 50); add(l, "Orc", 5, 550, 110); break;
             case 3: add(l, "Goblin", 14, 180, 50); add(l, "Orc", 8, 550, 110); add(l, "Golem", 4, 1400, 175); break;
             case 4: add(l, "Golem", 6, 1400, 175); add(l, "Chimera", 18, 2200, 340); add(l, "Lich", 12, 3500, 600); break;
-            case 5: currentBoss = new Enemy("Imam Voldigoad (BOSS)", 25000, 950); l.add(currentBoss); break;
+            case 5: currentBoss = new BossEnemy("Imam Voldigoad (BOSS)", 25000, 950); l.add(currentBoss); break;
         }
         return l;
     }
