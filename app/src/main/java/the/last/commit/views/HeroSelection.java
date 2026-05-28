@@ -54,7 +54,7 @@ public class HeroSelection {
         content.setAlignment(Pos.CENTER);
         root.setCenter(content);
 
-        return new Scene(root, 600, 380);
+        return new Scene(root, 600, 550);
     }
 
     private Button createHeroButton(String heroName, String heroType) {
