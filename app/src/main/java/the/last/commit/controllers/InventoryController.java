@@ -20,7 +20,7 @@ public class InventoryController {
 
     public List<InventoryItem> loadInventory() {
         List<InventoryItem> list = new ArrayList<>();
-        String query = "SELECT * FROM inventory WHERE progress_id = ?";
+        String query = "SELECT * FROM inventory WHERE user_id = ?";
         try (Connection conn = DatabaseConnection.connect();
             PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setInt(1, hero.getProgressId());
@@ -29,7 +29,7 @@ public class InventoryController {
                 String itemId = rs.getString("item_id");
                 Equipment equip = ItemCatalog.getItemById(itemId);
                 if (equip != null) {
-                    list.add(new InventoryItem(rs.getInt("inventory_id"), equip, rs.getBoolean("is_equipped"), rs.getInt("quantity")));
+                    list.add(new InventoryItem(rs.getInt("id"), equip, rs.getBoolean("is_equipped"), rs.getInt("quantity")));
                 }
             }
         } catch (SQLException e) {
@@ -51,7 +51,7 @@ public class InventoryController {
         }
 
         try (Connection conn = DatabaseConnection.connect()) {
-            String update = "UPDATE inventory SET is_equipped = ? WHERE inventory_id = ?";
+            String update = "UPDATE inventory SET is_equipped = ? WHERE id = ?";
             PreparedStatement pstmt = conn.prepareStatement(update);
             pstmt.setBoolean(1, newState);
             pstmt.setInt(2, item.id);
@@ -65,7 +65,7 @@ public class InventoryController {
 
     private void unequipAllOfType(String type) {
         try (Connection conn = DatabaseConnection.connect()) {
-            String update = "UPDATE inventory SET is_equipped = 0 WHERE progress_id = ? AND item_type = ?";
+            String update = "UPDATE inventory SET is_equipped = 0 WHERE user_id = ? AND item_type = ?";
             PreparedStatement pstmt = conn.prepareStatement(update);
             pstmt.setInt(1, hero.getProgressId());
             pstmt.setString(2, type);
@@ -77,7 +77,7 @@ public class InventoryController {
 
     public void refreshHeroEquippedItems() {
         List<Equipment> equipped = new ArrayList<>();
-        String query = "SELECT item_id FROM inventory WHERE progress_id = ? AND is_equipped = 1";
+        String query = "SELECT item_id FROM inventory WHERE user_id = ? AND is_equipped = 1";
         try (Connection conn = DatabaseConnection.connect();
             PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setInt(1, hero.getProgressId());
@@ -109,12 +109,12 @@ public class InventoryController {
 
         try (Connection conn = DatabaseConnection.connect()) {
             if (item.quantity > 1) {
-                String update = "UPDATE inventory SET quantity = quantity - 1 WHERE inventory_id = ?";
+                String update = "UPDATE inventory SET quantity = quantity - 1 WHERE id = ?";
                 PreparedStatement pstmt = conn.prepareStatement(update);
                 pstmt.setInt(1, item.id);
                 pstmt.executeUpdate();
             } else {
-                String delete = "DELETE FROM inventory WHERE inventory_id = ?";
+                String delete = "DELETE FROM inventory WHERE id = ?";
                 PreparedStatement pstmt = conn.prepareStatement(delete);
                 pstmt.setInt(1, item.id);
                 pstmt.executeUpdate();
