@@ -36,14 +36,14 @@ public class InventoryScene {
         ScrollPane scroll = new ScrollPane(itemContainer);
         scroll.setFitToWidth(true);
         scroll.setStyle("-fx-background: transparent; -fx-background-color: transparent;");
-        scroll.setPrefHeight(500);
+        scroll.setPrefHeight(420);
 
         Button backBtn = new Button("BACK TO LOBBY");
         backBtn.getStyleClass().addAll("button", "action-btn");
         backBtn.setOnAction(e -> stage.setScene(new LobbyScene(stage, hero).getScene()));
 
         root.getChildren().addAll(titleLabel, scroll, backBtn);
-        scene = new Scene(root, 900, 750);
+        scene = new Scene(root, 1024, 680);
         if (getClass().getResource("/style.css") != null) {
             scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
         }
@@ -61,7 +61,7 @@ public class InventoryScene {
             HBox row = new HBox(25);
             row.setAlignment(Pos.CENTER_LEFT);
             row.getStyleClass().add("panel");
-            row.setMaxWidth(700);
+            row.setMaxWidth(800);
 
             VBox info = new VBox(8);
             Label name = new Label(item.equipment.getName() + (item.quantity > 1 ? " x" + item.quantity : ""));
