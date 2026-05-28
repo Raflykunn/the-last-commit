@@ -14,6 +14,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import the.last.commit.models.Hero;
+import the.last.commit.models.HeroFactory;
 import the.last.commit.models.User;
 import the.last.commit.utils.DatabaseConnection;
 
@@ -68,7 +69,7 @@ public class HeroSelection {
     }
 
     private void selectHero(String heroName, String heroType) {
-        Hero hero = new Hero(0, heroName, heroType);
+        Hero hero = HeroFactory.createHero(0, heroName, heroType);
         Hero savedHero = DatabaseConnection.createHeroSelection(user, hero);
         if (savedHero != null) {
             stage.setScene(new LobbyScene(stage, savedHero).getScene());
