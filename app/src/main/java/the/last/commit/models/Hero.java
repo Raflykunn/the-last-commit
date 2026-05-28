@@ -3,38 +3,22 @@ package the.last.commit.models;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Hero {
-    private int progressId;
-    private String name, type, imagePath;
-    private int gold, upgradePoints, highestWave;
-    private int skillKills = 0;
-    private int ultKills = 0;
-    private int baseHp, baseResource, baseDefense, baseAtk, baseSkillAtk, baseUltAtk;
-    private int currentHp, currentResource;
-    private String resourceName, basicAtkName, skillAtkName, ultAtkName;
-    private int skillCost, ultCost;
-    private int skillCd, ultCd;
-    private List<Equipment> equippedItems = new ArrayList<>();
+public abstract class Hero {
+    protected int progressId;
+    protected String name, type, imagePath;
+    protected int gold, upgradePoints, highestWave;
+    protected int skillKills = 0;
+    protected int ultKills = 0;
+    protected int baseHp, baseResource, baseDefense, baseAtk, baseSkillAtk, baseUltAtk;
+    protected int currentHp, currentResource;
+    protected String resourceName, basicAtkName, skillAtkName, ultAtkName;
+    protected int skillCost, ultCost;
+    protected int skillCd, ultCd;
+    protected List<Equipment> equippedItems = new ArrayList<>();
 
     public Hero(int progressId, String name, String type) {
         this.progressId = progressId; this.name = name; this.type = type;
         this.gold = 25; this.upgradePoints = 0; this.highestWave = 0;
-        
-        if (type.equalsIgnoreCase("katagiri")) {
-            baseHp = 650; baseResource = 450; resourceName = "Mana"; baseDefense = 5;
-            basicAtkName = "Flame"; baseAtk = 45;
-            skillAtkName = "Glacial Prison"; baseSkillAtk = 140; skillCost = 85; skillCd = 9;
-            ultAtkName = "Absolute Zero"; baseUltAtk = 550; ultCost = 320; ultCd = 24;
-            this.imagePath = "/images/Katagiri.png";
-        } else {
-            baseHp = 720; baseResource = 500; resourceName = "Energy"; baseDefense = 12;
-            basicAtkName = "Piercing"; baseAtk = 50;
-            skillAtkName = "Earth Quake"; baseSkillAtk = 160; skillCost = 100; skillCd = 12;
-            ultAtkName = "Cataclysm"; baseUltAtk = 600; ultCost = 380; ultCd = 28;
-            this.imagePath = "/images/Kyotaka.png";
-        }
-        this.currentHp = getTotalMaxHp();
-        this.currentResource = getTotalMaxResource();
     }
 
     public int getTotalMaxHp() { return baseHp + getBonus("armor", true); }
@@ -59,9 +43,9 @@ public class Hero {
     public int getUpgradePoints() { return upgradePoints; } public void setUpgradePoints(int p) { this.upgradePoints = p; }
     public int getHighestWave() { return highestWave; } public void setHighestWave(int w) { this.highestWave = w; }
     public int getCurrentHp() { return currentHp; }
-    public void setCurrentHp(int hp) { this.currentHp = Math.min(hp, getTotalMaxHp()); }
+    public void setCurrentHp(int hp) { this.currentHp = Math.max(0, Math.min(hp, getTotalMaxHp())); }
     public int getCurrentResource() { return currentResource; }
-    public void setCurrentResource(int res) { this.currentResource = Math.min(res, getTotalMaxResource()); }
+    public void setCurrentResource(int res) { this.currentResource = Math.max(0, Math.min(res, getTotalMaxResource())); }
     public int getMaxHp() { return baseHp; } public void setMaxHp(int hp) { this.baseHp = hp; }
     public int getMaxResource() { return baseResource; } public void setMaxResource(int res) { this.baseResource = res; }
     public int getDefense() { return baseDefense; } public void setDefense(int def) { this.baseDefense = def; }
