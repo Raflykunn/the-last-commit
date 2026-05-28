@@ -30,7 +30,7 @@ public class LobbyScene {
         
         new InventoryController(hero).refreshHeroEquippedItems();
 
-        VBox root = new VBox(20);
+        VBox root = new VBox(15);
         root.setAlignment(Pos.CENTER);
         root.getStyleClass().add("root");
 
@@ -42,7 +42,7 @@ public class LobbyScene {
 
         VBox statsPanel = createStatsPanel();
         
-        VBox menuPanel = new VBox(25);
+        VBox menuPanel = new VBox(15);
         menuPanel.setAlignment(Pos.CENTER);
         
         Button playBtn = new Button("START MISSION");
@@ -76,7 +76,7 @@ public class LobbyScene {
         mainContent.getChildren().addAll(statsPanel, menuPanel);
         root.getChildren().addAll(titleLabel, mainContent);
 
-        scene = new Scene(root, 1000, 800);
+        scene = new Scene(root, 1024, 680);
         if (getClass().getResource("/style.css") != null) {
             scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
         }
