@@ -18,6 +18,14 @@ public class App extends Application {
         primaryStage.setTitle("The Last Commit");
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
+
+        // Otomatis posisikan ke tengah layar saat Scene berganti ukuran
+        primaryStage.sceneProperty().addListener((observable, oldScene, newScene) -> {
+            if (newScene != null) {
+                javafx.application.Platform.runLater(primaryStage::centerOnScreen);
+            }
+        });
+
         primaryStage.show();
     }
 
