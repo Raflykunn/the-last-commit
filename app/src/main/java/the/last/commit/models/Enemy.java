@@ -19,4 +19,9 @@ public class Enemy {
     public void setCurrentHp(int currentHp) { this.currentHp = Math.max(0, currentHp); }
     public int getDamage() { return damage; }
     public boolean isDead() { return currentHp <= 0; }
+
+    public boolean takeDamage(int damage) {
+        this.currentHp = Math.max(0, this.currentHp - damage);
+        return false; // Standar musuh tidak menangkis
+    }
 }
