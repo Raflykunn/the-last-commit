@@ -38,7 +38,7 @@ public class ShopScene {
             HBox itemRow = new HBox(25);
             itemRow.setAlignment(Pos.CENTER_LEFT);
             itemRow.getStyleClass().add("panel");
-            itemRow.setMaxWidth(700);
+            itemRow.setMaxWidth(800);
 
             VBox info = new VBox(8);
             Label name = new Label(item.getName());
@@ -67,14 +67,14 @@ public class ShopScene {
         ScrollPane scroll = new ScrollPane(itemContainer);
         scroll.setFitToWidth(true);
         scroll.setStyle("-fx-background: transparent; -fx-background-color: transparent;");
-        scroll.setPrefHeight(500);
+        scroll.setPrefHeight(420);
 
         Button backBtn = new Button("BACK TO LOBBY");
         backBtn.getStyleClass().addAll("button", "action-btn");
         backBtn.setOnAction(e -> stage.setScene(new LobbyScene(stage, hero).getScene()));
 
         root.getChildren().addAll(titleLabel, goldLabel, scroll, backBtn);
-        scene = new Scene(root, 900, 750);
+        scene = new Scene(root, 1024, 680);
         if (getClass().getResource("/style.css") != null) {
             scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
         }
