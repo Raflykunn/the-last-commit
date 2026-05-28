@@ -49,20 +49,20 @@ public class BattleScene {
         root.getStyleClass().add("root");
 
         StackPane topPane = new StackPane();
-        topPane.setPadding(new Insets(20));
+        topPane.setPadding(new Insets(10));
         waveTitle = new Label("WAVE - " + wave);
         waveTitle.getStyleClass().add("title-label");
         topPane.getChildren().add(waveTitle);
         root.setTop(topPane);
 
         VBox heroPanel = new VBox(15);
-        heroPanel.setPadding(new Insets(0, 40, 0, 40));
+        heroPanel.setPadding(new Insets(0, 20, 0, 20));
         heroPanel.setAlignment(Pos.TOP_CENTER);
-        heroPanel.setMinWidth(300);
+        heroPanel.setMinWidth(250);
 
         heroImageView = new ImageView(controller.getHeroIdle());
-        heroImageView.setFitWidth(200);
-        heroImageView.setFitHeight(200);
+        heroImageView.setFitWidth(150);
+        heroImageView.setFitHeight(150);
         heroImageView.setPreserveRatio(true);
 
         Label hName = new Label(hero.getName().toUpperCase());
@@ -86,22 +86,22 @@ public class BattleScene {
         root.setLeft(heroPanel);
 
         VBox enemyPanel = new VBox(15);
-        enemyPanel.setPadding(new Insets(0, 40, 0, 40));
+        enemyPanel.setPadding(new Insets(0, 20, 0, 20));
         enemyPanel.setAlignment(Pos.TOP_CENTER);
-        enemyPanel.setMinWidth(300);
+        enemyPanel.setMinWidth(250);
 
         enemyHordeView = new ImageView();
         if (wave == 5) enemyHordeView.setImage(controller.getBossIdle());
         else enemyHordeView.setImage(controller.getEnemyIdle());
-        enemyHordeView.setFitWidth(200);
-        enemyHordeView.setFitHeight(200);
+        enemyHordeView.setFitWidth(150);
+        enemyHordeView.setFitHeight(150);
         enemyHordeView.setPreserveRatio(true);
 
         targetingList = new VBox(8);
         targetingList.setAlignment(Pos.TOP_CENTER);
         ScrollPane sp = new ScrollPane(targetingList);
         sp.setFitToWidth(true);
-        sp.setPrefHeight(300);
+        sp.setPrefHeight(200);
         sp.setStyle("-fx-background: transparent; -fx-background-color: transparent;");
 
         enemyPanel.getChildren().addAll(enemyHordeView, new Label("TARGETS"){{getStyleClass().add("subtitle-label");}}, sp);
@@ -111,13 +111,13 @@ public class BattleScene {
         logArea.setEditable(false);
         logArea.getStyleClass().add("battle-log");
         VBox logContainer = new VBox(logArea);
-        logContainer.setPadding(new Insets(20, 10, 20, 10));
+        logContainer.setPadding(new Insets(10, 10, 10, 10));
         VBox.setVgrow(logArea, Priority.ALWAYS);
         root.setCenter(logContainer);
 
         controlPanel = new HBox(20);
         controlPanel.setAlignment(Pos.CENTER);
-        controlPanel.setPadding(new Insets(25));
+        controlPanel.setPadding(new Insets(15));
         controlPanel.getStyleClass().add("panel");
 
         Button basicBtn = createBtn(hero.getBasicAtkName());
@@ -134,8 +134,10 @@ public class BattleScene {
         root.setBottom(controlPanel);
 
         updateUI();
-        scene = new Scene(root, 1280, 850);
-        scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
+        scene = new Scene(root, 1024, 680);
+        if (getClass().getResource("/style.css") != null) {
+            scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
+        }
     }
 
     private Button createBtn(String t) {
@@ -187,7 +189,9 @@ public class BattleScene {
         javafx.application.Platform.runLater(() -> {
             Alert a = new Alert(Alert.AlertType.INFORMATION);
             a.setTitle(t); a.setHeaderText(null); a.setContentText(c);
-            a.getDialogPane().getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
+            if (getClass().getResource("/style.css") != null) {
+                a.getDialogPane().getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
+            }
             a.getDialogPane().getStyleClass().add("root");
             a.showAndWait();
         });
@@ -221,7 +225,9 @@ public class BattleScene {
         
         dialog.getDialogPane().setContent(content);
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
-        dialog.getDialogPane().getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
+        if (getClass().getResource("/style.css") != null) {
+            dialog.getDialogPane().getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
+        }
         dialog.getDialogPane().getStyleClass().add("root");
         dialog.showAndWait();
     }
