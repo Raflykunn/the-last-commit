@@ -52,6 +52,7 @@ public class Hero {
     }
 
     public int getProgressId() { return progressId; }
+    public void setProgressId(int progressId) { this.progressId = progressId; }
     public String getName() { return name; }
     public String getType() { return type; }
     public int getGold() { return gold; } public void setGold(int gold) { this.gold = gold; }
