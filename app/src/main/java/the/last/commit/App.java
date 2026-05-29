@@ -19,10 +19,30 @@ public class App extends Application {
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
 
-        // Otomatis posisikan ke tengah layar saat Scene berganti ukuran
+
         primaryStage.sceneProperty().addListener((observable, oldScene, newScene) -> {
             if (newScene != null) {
                 javafx.application.Platform.runLater(primaryStage::centerOnScreen);
+            }
+        });
+
+
+        primaryStage.setOnCloseRequest(event -> {
+            event.consume();
+
+            Scene currentScene = primaryStage.getScene();
+            boolean isBattle = currentScene != null && "battle".equals(currentScene.getUserData());
+
+            String title = "Keluar Game";
+            String message = "Apakah Anda yakin ingin keluar dari game?";
+            if (isBattle) {
+                title = "Keluar Pertempuran";
+                message = "PERINGATAN: Anda sedang berada dalam pertempuran!\nJika keluar sekarang, data pertarungan tidak akan disimpan.";
+            }
+
+            boolean confirmed = the.last.commit.views.CustomAlert.showConfirmation(primaryStage, title, message);
+            if (confirmed) {
+                System.exit(0);
             }
         });
 

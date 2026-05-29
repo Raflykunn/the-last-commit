@@ -19,7 +19,7 @@ public class Equipment {
         this.minWave = minWave;
     }
 
-    // Getters
+
     public String getItemId() { return itemId; }
     public String getName() { return name; }
     public String getType() { return type; }

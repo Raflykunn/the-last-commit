@@ -25,6 +25,9 @@ dependencies {
 
     // sqlite jdbc driver
     implementation 'org.xerial:sqlite-jdbc:3.45.1.0'
+    
+    // slf4j logger implementation to remove static binder warnings
+    implementation 'org.slf4j:slf4j-simple:2.0.13'
 }
 
 test {
@@ -33,7 +36,7 @@ test {
 
 javafx {
     version = '21.0.6'
-    modules = [ 'javafx.controls' ]
+    modules = [ 'javafx.controls', 'javafx.media' ]
 }
 
 // Apply a specific Java toolchain to ease working on different environments.

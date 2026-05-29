@@ -45,7 +45,7 @@ public class InventoryController {
         }
 
         boolean newState = !item.isEquipped;
-        
+
         if (newState) {
             unequipAllOfType(item.equipment.getType());
         }
@@ -56,7 +56,7 @@ public class InventoryController {
             pstmt.setBoolean(1, newState);
             pstmt.setInt(2, item.id);
             pstmt.executeUpdate();
-            
+
             refreshHeroEquippedItems();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -103,6 +103,8 @@ public class InventoryController {
         } else if (id.startsWith("POT_M")) {
             hero.setCurrentHp(hero.getTotalMaxHp());
             hero.setCurrentResource(hero.getTotalMaxResource());
+        } else if (id.equals("POT_AB")) {
+            hero.setAntiBlockActive(true);
         }
 
         DatabaseConnection.saveHeroProgress(hero);

@@ -1,229 +1,364 @@
+/* Modern Premium RPG Theme */
+
 .root {
-    -fx-background-color: #111827;
+    -fx-font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif;
+    -fx-background-color: radial-gradient(center 50% 50%, radius 70%, #16213E, #0F172A);
 }
 
+/* Typography */
 .title-label {
-    -fx-text-fill: #EFEFEF;
-    -fx-font-family: 'Segoe UI', sans-serif;
-    -fx-font-size: 28px;
+    -fx-text-fill: linear-gradient(to right, #FFD700, #FDB931);
+    -fx-font-size: 32px;
+    -fx-font-weight: 900;
+    -fx-effect: dropshadow(three-pass-box, rgba(255,215,0,0.4), 10, 0, 0, 0);
+}
+
+.title-game {
+    -fx-font-size: 48px;
     -fx-font-weight: bold;
+    -fx-text-fill: linear-gradient(to right, #00FFFF, #0077FF);
+    -fx-effect: dropshadow(three-pass-box, rgba(0,255,255,0.6), 15, 0, 0, 0);
+    -fx-font-family: 'Impact', 'Arial Black', sans-serif;
+    -fx-letter-spacing: 2px;
 }
 
 .subtitle-label {
-    -fx-text-fill: #778899;
+    -fx-text-fill: #94A3B8;
     -fx-font-size: 14px;
+    -fx-font-weight: bold;
 }
 
 .stat-label {
-    -fx-text-fill: #EFEFEF;
+    -fx-text-fill: #F1F5F9;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
 }
 
 .gold-label {
     -fx-text-fill: #FFD700;
     -fx-font-weight: bold;
+    -fx-font-size: 16px;
+    -fx-effect: dropshadow(two-pass-box, rgba(255,215,0,0.5), 5, 0, 0, 0);
 }
 
+/* Glassmorphism Panels */
 .panel {
-    -fx-background-color: #1e293b;
-    -fx-border-color: #B8860B;
-    -fx-border-width: 2px;
-    -fx-border-radius: 5px;
-    -fx-background-radius: 5px;
-    -fx-padding: 20;
+    -fx-background-color: rgba(30, 41, 59, 0.7);
+    -fx-border-color: rgba(255, 255, 255, 0.1);
+    -fx-border-width: 1px;
+    -fx-border-radius: 12px;
+    -fx-background-radius: 12px;
+    -fx-padding: 25;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 15, 0, 0, 5);
 }
-
-.button {
-    -fx-background-color: #1e293b;
-    -fx-text-fill: #EFEFEF;
-    -fx-border-color: #475569;
-    -fx-border-radius: 3px;
-    -fx-background-radius: 3px;
-    -fx-cursor: hand;
-    -fx-padding: 8 15;
-}
-
-.button:hover {
-    -fx-background-color: #334155;
-    -fx-border-color: #B8860B;
-    -fx-effect: dropshadow(three-pass-box, #B8860B, 10, 0, 0, 0);
-}
-
-.action-btn {
-    -fx-min-width: 120px;
-}
-
-.start-btn {
-    -fx-background-color: #8B0000;
-    -fx-border-color: #FFD700;
-    -fx-font-weight: bold;
-}
-
-.start-btn:hover {
-    -fx-background-color: #A52A2A;
-    -fx-effect: dropshadow(three-pass-box, #FFD700, 15, 0, 0, 0);
-}
-
-.hp-bar .bar {
-    -fx-background-color: #dc2626;
-}
-.hp-bar .track {
-    -fx-background-color: #0f172a;
-    -fx-border-color: #334155;
-}
-
-.mana-bar .bar {
-    -fx-background-color: #2563eb;
-}
-.mana-bar .track {
-    -fx-background-color: #0f172a;
-    -fx-border-color: #334155;
-}
-
-.energy-bar .bar {
-    -fx-background-color: #f59e0b;
-}
-.energy-bar .track {
-    -fx-background-color: #0f172a;
-    -fx-border-color: #334155;
-}
-
-.battle-log {
-    -fx-control-inner-background: #0f172a;
-    -fx-text-fill: #e2e8f0;
-    -fx-border-color: #475569;
-}
-
-.root {
-    -fx-font-family: "Courier New", "Lucida Console", monospace;
-    -fx-background-color: #000000;
-}
-
-.title-game {
-    -fx-font-size: 42px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #ffd700;
-    -fx-effect: dropshadow(one-pass-box, #ffffff, 0, 0, 3, 3);
-}
-
-.section-title {
-    -fx-font-size: 22px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #ffffff;
-    -fx-border-color: transparent transparent #ffffff transparent;
-    -fx-border-width: 4;
-    -fx-padding: 0 0 5 0;
-}
-
-.text-white { -fx-text-fill: #ffffff; }
-.text-gold { -fx-text-fill: #ffd700; -fx-font-weight: bold;}
-.text-cyan { -fx-text-fill: #00ffff; -fx-font-weight: bold;}
-.text-red { -fx-text-fill: #ff3333; -fx-font-weight: bold;}
 
 .rpg-panel {
-    -fx-background-color: #00008b;
-    -fx-border-color: #ffffff;
-    -fx-border-width: 4;
-    -fx-border-style: solid;
-    -fx-border-radius: 0;
-    -fx-background-radius: 0;
+    -fx-background-color: rgba(15, 23, 42, 0.85);
+    -fx-border-color: linear-gradient(to bottom right, #00FFFF, #0044FF);
+    -fx-border-width: 2px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
     -fx-padding: 20;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,255,255,0.2), 20, 0, 0, 0);
 }
 
 .rpg-panel:hover {
-    -fx-border-color: #ffd700;
-    -fx-background-color: #0000aa;
+    -fx-border-color: linear-gradient(to bottom right, #FFD700, #FF8C00);
+    -fx-effect: dropshadow(three-pass-box, rgba(255,215,0,0.3), 20, 0, 0, 0);
+}
+
+/* Buttons */
+.button {
+    -fx-background-color: linear-gradient(to bottom, #1E293B, #0F172A);
+    -fx-text-fill: #E2E8F0;
+    -fx-font-weight: bold;
+    -fx-border-color: #334155;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-cursor: hand;
+    -fx-padding: 10 20;
+    -fx-font-size: 14px;
+    -fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.3), 5, 0, 0, 2);
+}
+
+.button:hover {
+    -fx-background-color: linear-gradient(to bottom, #334155, #1E293B);
+    -fx-border-color: #00FFFF;
+    -fx-text-fill: #FFFFFF;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,255,255,0.4), 15, 0, 0, 0);
+}
+
+.button:pressed {
+    -fx-background-color: #0F172A;
+    -fx-translate-y: 1px;
+}
+
+.button:disabled {
+    -fx-background-color: #1E293B;
+    -fx-text-fill: #64748B;
+    -fx-border-color: #334155;
+    -fx-opacity: 0.6;
+}
+
+.start-btn {
+    -fx-background-color: linear-gradient(to bottom, #E11D48, #9F1239);
+    -fx-border-color: #FDA4AF;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 16px;
+}
+
+.start-btn:hover {
+    -fx-background-color: linear-gradient(to bottom, #F43F5E, #BE123C);
+    -fx-border-color: #FFE4E6;
+    -fx-effect: dropshadow(three-pass-box, rgba(225,29,72,0.6), 20, 0, 0, 0);
 }
 
 .rpg-button {
-    -fx-background-color: #333333;
-    -fx-text-fill: #ffffff;
+    -fx-background-color: linear-gradient(to right, #0F172A, #1E293B);
+    -fx-text-fill: #00FFFF;
     -fx-font-weight: bold;
     -fx-font-size: 16px;
-    -fx-padding: 10 20 10 20;
-    -fx-border-color: #ffffff;
-    -fx-border-width: 2;
-    -fx-border-radius: 0;
-    -fx-background-radius: 0;
+    -fx-padding: 12 24;
+    -fx-border-color: #00FFFF;
+    -fx-border-width: 1px;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
     -fx-cursor: hand;
 }
 .rpg-button:hover {
-    -fx-background-color: #555555;
-    -fx-border-color: #ffd700;
-    -fx-text-fill: #ffd700;
+    -fx-background-color: #00FFFF;
+    -fx-text-fill: #0F172A;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,255,255,0.5), 15, 0, 0, 0);
 }
 .rpg-button:pressed {
-    -fx-background-color: #111111;
     -fx-translate-y: 2px;
 }
-.rpg-button:disabled {
-    -fx-background-color: #222222;
-    -fx-border-color: #555555;
-    -fx-text-fill: #555555;
-}
 
-.btn-primary { -fx-background-color: #008800; }
-.btn-primary:hover { -fx-background-color: #00bb00; }
+/* Action Buttons for Combat */
+.btn-primary { -fx-background-color: linear-gradient(to bottom, #10B981, #047857); -fx-border-color: #6EE7B7; }
+.btn-primary:hover { -fx-background-color: linear-gradient(to bottom, #34D399, #059669); -fx-effect: dropshadow(three-pass-box, rgba(16,185,129,0.5), 15, 0, 0, 0); }
 
-.btn-attack { -fx-background-color: #aa0000; }
-.btn-attack:hover { -fx-background-color: #dd0000; }
+.btn-attack { -fx-background-color: linear-gradient(to bottom, #EF4444, #B91C1C); -fx-border-color: #FCA5A5; }
+.btn-attack:hover { -fx-background-color: linear-gradient(to bottom, #F87171, #DC2626); -fx-effect: dropshadow(three-pass-box, rgba(239,68,68,0.5), 15, 0, 0, 0); }
 
-.btn-skill { -fx-background-color: #0000aa; }
-.btn-skill:hover { -fx-background-color: #0000dd; }
+.btn-skill { -fx-background-color: linear-gradient(to bottom, #3B82F6, #1D4ED8); -fx-border-color: #93C5FD; }
+.btn-skill:hover { -fx-background-color: linear-gradient(to bottom, #60A5FA, #2563EB); -fx-effect: dropshadow(three-pass-box, rgba(59,130,246,0.5), 15, 0, 0, 0); }
 
-.btn-ult { -fx-background-color: #6600aa; }
-.btn-ult:hover { -fx-background-color: #9900dd; }
+.btn-ult { -fx-background-color: linear-gradient(to bottom, #8B5CF6, #5B21B6); -fx-border-color: #C4B5FD; }
+.btn-ult:hover { -fx-background-color: linear-gradient(to bottom, #A78BFA, #7C3AED); -fx-effect: dropshadow(three-pass-box, rgba(139,92,246,0.5), 15, 0, 0, 0); }
 
+/* Progress Bars */
 .progress-bar {
-    -fx-pref-height: 22px;
-    -fx-background-radius: 0;
-    -fx-border-color: #ffffff;
-    -fx-border-width: 2;
-    -fx-padding: 2;
+    -fx-pref-height: 18px;
+    -fx-background-radius: 8px;
+    -fx-border-color: rgba(255, 255, 255, 0.1);
+    -fx-border-width: 1px;
+    -fx-border-radius: 8px;
+    -fx-padding: 1;
 }
+
 .progress-bar .track {
-    -fx-background-color: #000000;
-    -fx-background-radius: 0;
-    -fx-border-radius: 0;
+    -fx-background-color: rgba(15, 23, 42, 0.8);
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
 }
 
-.bar-hp .bar { 
-    -fx-background-color: #ff0000; 
-    -fx-background-radius: 0; 
-}
-.bar-mana .bar { 
-    -fx-background-color: #0088ff; 
-    -fx-background-radius: 0; 
-}
-.bar-energy .bar { 
-    -fx-background-color: #ffcc00; 
-    -fx-background-radius: 0; 
-}
-.bar-enemy .bar { 
-    -fx-background-color: #880000; 
-    -fx-background-radius: 0; 
+.hp-bar .bar, .bar-hp .bar {
+    -fx-background-color: linear-gradient(to right, #E11D48, #F43F5E);
+    -fx-background-radius: 6px;
+    -fx-effect: dropshadow(two-pass-box, rgba(225,29,72,0.4), 8, 0, 0, 0);
 }
 
-.text-area {
-    -fx-font-family: "Courier New", monospace;
-    -fx-font-size: 16px;
-    -fx-border-color: #ffffff;
-    -fx-border-width: 4;
+.mana-bar .bar, .bar-mana .bar {
+    -fx-background-color: linear-gradient(to right, #2563EB, #3B82F6);
+    -fx-background-radius: 6px;
+    -fx-effect: dropshadow(two-pass-box, rgba(37,99,235,0.4), 8, 0, 0, 0);
+}
+
+.energy-bar .bar, .bar-energy .bar {
+    -fx-background-color: linear-gradient(to right, #D97706, #F59E0B);
+    -fx-background-radius: 6px;
+    -fx-effect: dropshadow(two-pass-box, rgba(217,119,6,0.4), 8, 0, 0, 0);
+}
+
+.bar-enemy .bar {
+    -fx-background-color: linear-gradient(to right, #7F1D1D, #991B1B);
+    -fx-background-radius: 6px;
+}
+
+/* Battle Log */
+.battle-log {
+    -fx-font-family: 'Consolas', 'Courier New', monospace;
+    -fx-font-size: 14px;
+    -fx-border-color: rgba(0, 255, 255, 0.3);
+    -fx-border-width: 1px;
+    -fx-border-radius: 8px;
     -fx-background-color: transparent;
+    -fx-effect: dropshadow(one-pass-box, rgba(0,255,255,0.1), 10, 0, 0, 0);
 }
-.text-area .content {
-    -fx-background-color: #00008b;
+
+.battle-log .content {
+    -fx-background-color: rgba(15, 23, 42, 0.9);
+    -fx-background-radius: 8px;
 }
-.text-area .text {
-    -fx-fill: #ffffff;
+
+.battle-log .text {
+    -fx-fill: #E2E8F0;
+}
+
+/* Form Controls (Login, Shop) */
+.text-input {
+    -fx-background-color: rgba(15, 23, 42, 0.8);
+    -fx-text-fill: #FFFFFF;
+    -fx-prompt-text-fill: #64748B;
+    -fx-border-color: rgba(0, 255, 255, 0.4);
+    -fx-border-width: 1px;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-padding: 10px;
+    -fx-font-size: 14px;
+}
+
+.text-input:focused {
+    -fx-border-color: #00FFFF;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,255,255,0.4), 10, 0, 0, 0);
 }
 
 .combo-box {
-    -fx-background-color: #000000;
-    -fx-border-color: #ffffff;
-    -fx-border-width: 2;
-    -fx-border-radius: 0;
+    -fx-background-color: rgba(15, 23, 42, 0.8);
+    -fx-border-color: rgba(255, 255, 255, 0.2);
+    -fx-border-width: 1px;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
 }
+
 .combo-box .list-cell {
-    -fx-text-fill: white;
-    -fx-font-family: "Courier New", monospace;
+    -fx-text-fill: #FFFFFF;
+    -fx-background-color: transparent;
+}
+
+.combo-box-popup .list-view {
+    -fx-background-color: #1E293B;
+    -fx-border-color: #334155;
+}
+
+.combo-box-popup .list-view .list-cell:hover {
+    -fx-background-color: #334155;
+    -fx-text-fill: #00FFFF;
+}
+
+.text-white { -fx-text-fill: #FFFFFF; }
+.text-gold { -fx-text-fill: #FFD700; -fx-font-weight: bold; }
+.text-cyan { -fx-text-fill: #00FFFF; -fx-font-weight: bold; }
+.text-red { -fx-text-fill: #FF4444; -fx-font-weight: bold; }
+
+/* Tabs (for Login/Register) */
+.tab-pane .tab-header-area .tab-header-background {
+    -fx-background-color: transparent;
+}
+
+.tab-pane .tab {
+    -fx-background-color: rgba(30, 41, 59, 0.5);
+    -fx-text-fill: #94A3B8;
+    -fx-font-weight: bold;
+    -fx-border-radius: 8 8 0 0;
+    -fx-background-radius: 8 8 0 0;
+    -fx-padding: 5 20;
+    -fx-cursor: hand;
+}
+
+.tab-pane .tab:selected {
+    -fx-background-color: rgba(15, 23, 42, 0.9);
+    -fx-border-color: #00FFFF;
+    -fx-border-width: 2 0 0 0;
+}
+
+.tab-pane .tab .tab-label {
+    -fx-text-fill: #E2E8F0;
+    -fx-font-size: 14px;
+}
+
+.tab-pane .tab:selected .tab-label {
+    -fx-text-fill: #00FFFF;
+}
+
+/* Premium Callout Message Boxes */
+.message-callout {
+    -fx-background-color: rgba(30, 41, 59, 0.4);
+    -fx-border-width: 1px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 12px 18px;
+}
+
+.message-callout-error {
+    -fx-background-color: rgba(239, 68, 68, 0.12);
+    -fx-border-color: rgba(239, 68, 68, 0.45);
+    -fx-text-fill: #FECACA;
+}
+
+.message-callout-success {
+    -fx-background-color: rgba(6, 182, 212, 0.12);
+    -fx-border-color: rgba(6, 182, 212, 0.45);
+    -fx-text-fill: #CFFAFE;
+}
+
+/* Premium Dialog Overlay Styles */
+.dialog-overlay {
+    -fx-background-color: radial-gradient(center 50% 50%, radius 70%, #161F38, #0B101E);
+    -fx-border-color: linear-gradient(to bottom right, #00FFFF, #0055FF);
+    -fx-border-width: 2px;
+    -fx-border-radius: 12px;
+    -fx-background-radius: 12px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 255, 255, 0.35), 20, 0, 0, 0);
+}
+
+.dialog-overlay-confirm {
+    -fx-background-color: radial-gradient(center 50% 50%, radius 70%, #201A30, #0F0B1E);
+    -fx-border-color: linear-gradient(to bottom right, #FFD700, #FF6600);
+    -fx-border-width: 2px;
+    -fx-border-radius: 12px;
+    -fx-background-radius: 12px;
+    -fx-effect: dropshadow(three-pass-box, rgba(255, 215, 0, 0.35), 20, 0, 0, 0);
+}
+
+/* Premium Red Buttons */
+.rpg-button-red {
+    -fx-background-color: linear-gradient(to right, #3B0F1E, #5C1D2A);
+    -fx-text-fill: #FF5E7E;
+    -fx-font-weight: bold;
+    -fx-font-size: 16px;
+    -fx-padding: 12 24;
+    -fx-border-color: #FF5E7E;
+    -fx-border-width: 1px;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+    -fx-cursor: hand;
+}
+.rpg-button-red:hover {
+    -fx-background-color: #FF5E7E;
+    -fx-text-fill: #1B0409;
+    -fx-effect: dropshadow(three-pass-box, rgba(255,94,126,0.5), 15, 0, 0, 0);
+}
+.rpg-button-red:pressed {
+    -fx-translate-y: 2px;
+}
+
+.btn-red {
+    -fx-background-color: linear-gradient(to bottom, #EF4444, #B91C1C);
+    -fx-border-color: #FCA5A5;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-weight: bold;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-cursor: hand;
+    -fx-padding: 10 20;
+    -fx-font-size: 14px;
+}
+.btn-red:hover {
+    -fx-background-color: linear-gradient(to bottom, #F87171, #DC2626);
+    -fx-effect: dropshadow(three-pass-box, rgba(239,68,68,0.5), 15, 0, 0, 0);
+}
+.btn-red:pressed {
+    -fx-translate-y: 1px;
 }

@@ -1,6 +1,7 @@
 package the.last.commit.controllers;
 
 import the.last.commit.models.Hero;
+import the.last.commit.views.CustomAlert;
 import the.last.commit.views.BattleScene;
 import the.last.commit.views.LobbyScene;
 import javafx.scene.control.*;
@@ -35,7 +36,7 @@ public class GameController {
         content.getChildren().add(pointsLabel);
 
         content.getChildren().add(createUpgradeBtn("Max HP +20", () -> {
-            hero.setMaxHp(hero.getMaxHp() + 20);
+            hero.setBaseHp(hero.getBaseHp() + 20);
             hero.setCurrentHp(hero.getCurrentHp() + 20);
         }, pointsLabel));
 
@@ -44,15 +45,21 @@ public class GameController {
             hero.setCurrentResource(hero.getCurrentResource() + 15);
         }, pointsLabel));
 
+        content.getChildren().add(createUpgradeBtn("Defense +3", () -> {
+            hero.setDefense(hero.getDefense() + 3);
+        }, pointsLabel));
+
         content.getChildren().add(createUpgradeBtn("Basic ATK +2", () -> hero.setBasicAtk(hero.getBasicAtk() + 2), pointsLabel));
         content.getChildren().add(createUpgradeBtn("Skill ATK +5", () -> hero.setSkillAtk(hero.getSkillAtk() + 5), pointsLabel));
         content.getChildren().add(createUpgradeBtn("Ult ATK +12", () -> hero.setUltAtk(hero.getUltAtk() + 12), pointsLabel));
 
         dialog.getDialogPane().setContent(content);
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
-        dialog.getDialogPane().getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
+        if (getClass().getResource("/style.css") != null) {
+            dialog.getDialogPane().getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
+        }
         dialog.getDialogPane().getStyleClass().add("root");
-        
+
         dialog.showAndWait();
         refreshLobby();
     }
@@ -68,11 +75,7 @@ public class GameController {
                 pLabel.setText("Poin Tersisa: " + hero.getUpgradePoints());
                 the.last.commit.utils.DatabaseConnection.saveHeroProgress(hero);
             } else {
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Peringatan");
-                alert.setHeaderText("Poin Habis");
-                alert.setContentText("Selesaikan wave untuk mendapatkan poin!");
-                alert.showAndWait();
+                CustomAlert.showInfo(stage, "Poin Habis", "Selesaikan wave untuk mendapatkan poin!");
             }
         });
         return btn;

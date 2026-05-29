@@ -3,6 +3,9 @@ package the.last.commit.views;
 import the.last.commit.controllers.GameController;
 import the.last.commit.controllers.InventoryController;
 import the.last.commit.models.Hero;
+import the.last.commit.models.User;
+import the.last.commit.utils.SessionManager;
+import the.last.commit.utils.SoundAndAnimationHelper;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -27,24 +30,24 @@ public class LobbyScene {
     public LobbyScene(Stage stage, Hero hero) {
         this.hero = hero;
         this.controller = new GameController(stage, hero);
-        
+
         new InventoryController(hero).refreshHeroEquippedItems();
 
         VBox root = new VBox(15);
         root.setAlignment(Pos.CENTER);
         root.getStyleClass().add("root");
 
-        Label titleLabel = new Label("LOBBY - " + hero.getType().toUpperCase());
-        titleLabel.getStyleClass().add("title-label");
+        Label titleLabel = new Label("LOBBY - " + hero.getName().toUpperCase());
+        titleLabel.getStyleClass().add("title-game");
 
         HBox mainContent = new HBox(40);
         mainContent.setAlignment(Pos.CENTER);
 
         VBox statsPanel = createStatsPanel();
-        
+
         VBox menuPanel = new VBox(15);
         menuPanel.setAlignment(Pos.CENTER);
-        
+
         Button playBtn = new Button("START MISSION");
         playBtn.getStyleClass().addAll("button", "start-btn");
         playBtn.setMinWidth(250);
@@ -54,24 +57,26 @@ public class LobbyScene {
         inventoryBtn.getStyleClass().addAll("button", "action-btn");
         inventoryBtn.setMinWidth(250);
         inventoryBtn.setOnAction(e -> stage.setScene(new InventoryScene(stage, hero).getScene()));
-        
+
         Button shopBtn = new Button("SHOP");
         shopBtn.getStyleClass().addAll("button", "action-btn");
         shopBtn.setMinWidth(250);
         shopBtn.setOnAction(e -> stage.setScene(new ShopScene(stage, hero).getScene()));
-        
+
         Button upgradeBtn = new Button("UPGRADE STATS");
         upgradeBtn.getStyleClass().addAll("button", "action-btn");
         upgradeBtn.setMinWidth(250);
         upgradeBtn.setOnAction(e -> controller.showUpgradeDialog());
 
-        Button logoutBtn = new Button("LOGOUT");
-        logoutBtn.getStyleClass().addAll("button", "action-btn");
-        logoutBtn.setMinWidth(250);
-        logoutBtn.setStyle("-fx-border-color: #8B0000;");
-        logoutBtn.setOnAction(e -> stage.setScene(new LoginRegister(stage).createScene()));
+        Button mainMenuBtn = new Button("KELUAR KE MENU");
+        mainMenuBtn.getStyleClass().addAll("button", "btn-red");
+        mainMenuBtn.setMinWidth(250);
+        mainMenuBtn.setOnAction(e -> {
+            User user = SessionManager.getInstance().getCurrentUser();
+            stage.setScene(new MainMenuScene(stage, user).getScene());
+        });
 
-        menuPanel.getChildren().addAll(playBtn, inventoryBtn, shopBtn, upgradeBtn, logoutBtn);
+        menuPanel.getChildren().addAll(playBtn, inventoryBtn, shopBtn, upgradeBtn, mainMenuBtn);
 
         mainContent.getChildren().addAll(statsPanel, menuPanel);
         root.getChildren().addAll(titleLabel, mainContent);
@@ -80,11 +85,14 @@ public class LobbyScene {
         if (getClass().getResource("/style.css") != null) {
             scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
         }
+
+
+        SoundAndAnimationHelper.addClickSoundToAllButtons(root);
     }
 
     private VBox createStatsPanel() {
         VBox panel = new VBox(15);
-        panel.getStyleClass().add("panel");
+        panel.getStyleClass().add("rpg-panel");
         panel.setMinWidth(350);
         panel.setAlignment(Pos.CENTER);
 
@@ -111,18 +119,18 @@ public class LobbyScene {
         addStatRow(grid, 0, "Level:", String.valueOf(hero.getLevel()));
         addStatRow(grid, 1, "EXP:", String.valueOf(hero.getExp()));
         addStatRow(grid, 2, "Gold:", String.valueOf(hero.getGold()), "gold-label");
-        
-        int hpBonus = hero.getTotalMaxHp() - hero.getMaxHp();
-        addStatRow(grid, 3, "HP:", hero.getMaxHp() + (hpBonus > 0 ? " (+" + hpBonus + ")" : ""));
-        
+
+        int hpBonus = hero.getTotalMaxHp() - hero.getBaseHp();
+        addStatRow(grid, 3, "HP:", hero.getBaseHp() + (hpBonus > 0 ? " (+" + hpBonus + ")" : ""));
+
         addStatRow(grid, 4, hero.getResourceName() + ":", String.valueOf(hero.getMaxResource()));
-        
+
         int defBonus = hero.getTotalDefense() - hero.getDefense();
         addStatRow(grid, 5, "Defense:", hero.getDefense() + (defBonus > 0 ? " (+" + defBonus + ")" : ""));
-        
+
         int atkBonus = hero.getTotalBasicAtk() - hero.getBasicAtk();
         addStatRow(grid, 6, "Basic ATK:", hero.getBasicAtk() + (atkBonus > 0 ? " (+" + atkBonus + ")" : ""));
-        
+
         addStatRow(grid, 7, "Upgrade Points:", String.valueOf(hero.getUpgradePoints()));
 
         panel.getChildren().addAll(new Label("HERO STATS") {{ getStyleClass().add("gold-label"); }}, grid);
@@ -145,7 +153,7 @@ public class LobbyScene {
     private void showMissionDialog(Stage stage) {
         Dialog<Integer> dialog = new Dialog<>();
         dialog.setTitle("Misi Pertempuran");
-        
+
         VBox rootContainer = new VBox(20);
         rootContainer.setAlignment(Pos.CENTER);
         rootContainer.getStyleClass().add("panel");
@@ -155,15 +163,26 @@ public class LobbyScene {
         Button continueBtn = new Button("WAVE " + nextWave + " (NEW MISSION)");
         continueBtn.getStyleClass().addAll("button", "start-btn");
         continueBtn.setMinWidth(300);
-        continueBtn.setOnAction(e -> { dialog.setResult(nextWave); dialog.close(); });
-        
+        continueBtn.setOnAction(e -> {
+            boolean proceed = CustomAlert.showConfirmation(stage, "Persiapan Tempur",
+                "Apakah kamu yakin ingin melaju ke Wave " + nextWave + "?\n\n" +
+                "Disarankan untuk meningkatkan Stat atau membeli Potion di Lobby terlebih dahulu, " +
+                "atau lakukan Grinding di wave sebelumnya agar Hero kamu lebih kuat!\n\n" +
+                "PERINGATAN: Jika Hero kamu dikalahkan (mati) dalam pertempuran, " +
+                "seluruh data progress petualangan kamu akan di-reset (dihapus)!");
+            if (proceed) {
+                dialog.setResult(nextWave);
+                dialog.close();
+            }
+        });
+
         rootContainer.getChildren().add(new Label("Lanjutkan Progress:") {{ getStyleClass().add("subtitle-label"); }});
         rootContainer.getChildren().add(continueBtn);
 
         if (hero.getHighestWave() > 0) {
             rootContainer.getChildren().add(new Separator());
             rootContainer.getChildren().add(new Label("Grinding (Ulang Wave):") {{ getStyleClass().add("subtitle-label"); }});
-            
+
             FlowPane waveGrid = new FlowPane(10, 10);
             waveGrid.setAlignment(Pos.CENTER);
             for (int i = 1; i <= hero.getHighestWave(); i++) {
@@ -181,6 +200,9 @@ public class LobbyScene {
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
         dialog.getDialogPane().getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
         dialog.getDialogPane().getStyleClass().add("root");
+
+
+        SoundAndAnimationHelper.addClickSoundToAllButtons(rootContainer);
 
         dialog.showAndWait().ifPresent(w -> controller.startBattle(w));
     }

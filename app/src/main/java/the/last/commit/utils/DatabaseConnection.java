@@ -20,7 +20,7 @@ public class DatabaseConnection {
 
     private static Path resolveDatabasePath() {
         Path currentDir = Paths.get(System.getProperty("user.dir"));
-        
+
         if (Files.exists(currentDir.resolve("app"))) {
             return currentDir.resolve("app").resolve("db").resolve(DB_FILE_NAME);
         }
@@ -45,7 +45,7 @@ public class DatabaseConnection {
     public static Connection connect() {
         try {
             Class.forName("org.sqlite.JDBC");
-            
+
             Connection conn = DriverManager.getConnection(getJdbcUrl());
             try (Statement stmt = conn.createStatement()) {
                 stmt.execute("PRAGMA foreign_keys = ON;");
@@ -74,6 +74,7 @@ public class DatabaseConnection {
                 gold INTEGER DEFAULT 0,
                 hp INTEGER DEFAULT 100,
                 mana INTEGER DEFAULT 50,
+                defense INTEGER DEFAULT 5,
                 basic_attack_damage INTEGER DEFAULT 10,
                 basic_skill_damage INTEGER DEFAULT 25,
                 ultimate_damage INTEGER DEFAULT 50,
@@ -124,6 +125,13 @@ public class DatabaseConnection {
             stmt.execute(inventoryTable);
             stmt.execute(defaultItems);
 
+
+            try {
+                stmt.execute("ALTER TABLE game_progress ADD COLUMN defense INTEGER DEFAULT 5;");
+            } catch (SQLException ignored) {
+
+            }
+
             System.out.println("Database siap digunakan di: " + resolveDatabasePath().toAbsolutePath());
 
         } catch (Exception e) {
@@ -142,14 +150,25 @@ public class DatabaseConnection {
                     hero.setGold(rs.getInt("gold"));
                     hero.setUpgradePoints(rs.getInt("upgrade_points"));
                     hero.setHighestWave(rs.getInt("current_wave") - 1);
-                    hero.setMaxHp(rs.getInt("hp"));
+                    hero.setBaseHp(rs.getInt("hp"));
                     hero.setMaxResource(rs.getInt("mana"));
-                    hero.setDefense(rs.getInt("basic_attack_damage") > 0 ? hero.getDefense() : hero.getDefense());
                     hero.setBasicAtk(rs.getInt("basic_attack_damage"));
                     hero.setSkillAtk(rs.getInt("basic_skill_damage"));
                     hero.setUltAtk(rs.getInt("ultimate_damage"));
-                    hero.setCurrentHp(rs.getInt("hp"));
-                    hero.setCurrentResource(rs.getInt("mana"));
+
+
+                    try {
+                        int dbDefense = rs.getInt("defense");
+                        if (!rs.wasNull()) {
+                            hero.setDefense(dbDefense);
+                        }
+                    } catch (SQLException ignored) {
+
+                    }
+
+
+                    hero.setCurrentHp(hero.getTotalMaxHp());
+                    hero.setCurrentResource(hero.getTotalMaxResource());
                     hero.setProgressId(user.getId());
                     return hero;
                 }
@@ -161,19 +180,20 @@ public class DatabaseConnection {
     }
 
     public static Hero createHeroSelection(User user, Hero hero) {
-        String sql = "INSERT INTO game_progress (user_id, hero_name, current_wave, gold, hp, mana, basic_attack_damage, basic_skill_damage, ultimate_damage, upgrade_points) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO game_progress (user_id, hero_name, current_wave, gold, hp, mana, defense, basic_attack_damage, basic_skill_damage, ultimate_damage, upgrade_points) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, user.getId());
             pstmt.setString(2, hero.getName());
             pstmt.setInt(3, 1);
             pstmt.setInt(4, hero.getGold());
-            pstmt.setInt(5, hero.getMaxHp());
+            pstmt.setInt(5, hero.getBaseHp());
             pstmt.setInt(6, hero.getMaxResource());
-            pstmt.setInt(7, hero.getBasicAtk());
-            pstmt.setInt(8, hero.getSkillAtk());
-            pstmt.setInt(9, hero.getUltAtk());
-            pstmt.setInt(10, hero.getUpgradePoints());
+            pstmt.setInt(7, hero.getDefense());
+            pstmt.setInt(8, hero.getBasicAtk());
+            pstmt.setInt(9, hero.getSkillAtk());
+            pstmt.setInt(10, hero.getUltAtk());
+            pstmt.setInt(11, hero.getUpgradePoints());
             pstmt.executeUpdate();
             hero.setProgressId(user.getId());
             return hero;
@@ -187,22 +207,37 @@ public class DatabaseConnection {
         return heroName.toLowerCase().contains("katagiri") ? "katagiri" : "kyotaka";
     }
 
+
     public static void saveHeroProgress(Hero hero) {
-        String updateProgress = "UPDATE game_progress SET gold = ?, upgrade_points = ?, current_wave = ? WHERE user_id = ?";
+        String updateProgress = """
+            UPDATE game_progress
+            SET gold = ?, upgrade_points = ?, current_wave = ?,
+                hp = ?, mana = ?, defense = ?,
+                basic_attack_damage = ?, basic_skill_damage = ?, ultimate_damage = ?
+            WHERE user_id = ?
+            """;
 
         try (Connection conn = connect();
              PreparedStatement psProg = conn.prepareStatement(updateProgress)) {
             psProg.setInt(1, hero.getGold());
             psProg.setInt(2, hero.getUpgradePoints());
             psProg.setInt(3, hero.getHighestWave() + 1);
-            psProg.setInt(4, hero.getProgressId());
+            psProg.setInt(4, hero.getBaseHp());
+            psProg.setInt(5, hero.getMaxResource());
+            psProg.setInt(6, hero.getDefense());
+            psProg.setInt(7, hero.getBasicAtk());
+            psProg.setInt(8, hero.getSkillAtk());
+            psProg.setInt(9, hero.getUltAtk());
+            psProg.setInt(10, hero.getProgressId());
             psProg.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
+
     public static void resetHeroProgress(Hero hero) {
+
         try (Connection conn = connect();
              PreparedStatement pstmt = conn.prepareStatement("DELETE FROM inventory WHERE user_id = ?")) {
             pstmt.setInt(1, hero.getProgressId());
@@ -211,7 +246,24 @@ public class DatabaseConnection {
             e.printStackTrace();
         }
 
+
         Hero baseHero = HeroFactory.createHero(hero.getProgressId(), hero.getName(), hero.getType());
+        baseHero.setHighestWave(0);
         saveHeroProgress(baseHero);
+    }
+
+
+    public static void deleteHeroProgress(User user) {
+        try (Connection conn = connect()) {
+            PreparedStatement psInv = conn.prepareStatement("DELETE FROM inventory WHERE user_id = ?");
+            psInv.setInt(1, user.getId());
+            psInv.executeUpdate();
+
+            PreparedStatement psProg = conn.prepareStatement("DELETE FROM game_progress WHERE user_id = ?");
+            psProg.setInt(1, user.getId());
+            psProg.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -1,27 +1,36 @@
 package the.last.commit.models;
 
-public class Enemy {
-    private String name;
-    private int hp;
-    private int currentHp;
-    private int damage;
+
+public class Enemy extends GameCharacter {
+    protected int hp;
+    protected int damage;
+
 
     public Enemy(String name, int hp, int damage) {
-        this.name = name;
+        super(name, hp);
         this.hp = hp;
-        this.currentHp = hp;
         this.damage = damage;
     }
 
-    public String getName() { return name; }
-    public int getHp() { return hp; }
-    public int getCurrentHp() { return currentHp; }
-    public void setCurrentHp(int currentHp) { this.currentHp = Math.max(0, currentHp); }
-    public int getDamage() { return damage; }
-    public boolean isDead() { return currentHp <= 0; }
 
+    @Override
+    public int getMaxHp() {
+        return hp;
+    }
+
+
+    @Override
+    public void setCurrentHp(int currentHp) {
+        this.currentHp = Math.max(0, Math.min(currentHp, getMaxHp()));
+    }
+
+    public int getHp() { return hp; }
+    public int getDamage() { return damage; }
+
+
+    @Override
     public boolean takeDamage(int damage) {
-        this.currentHp = Math.max(0, this.currentHp - damage);
-        return false; // Standar musuh tidak menangkis
+        setCurrentHp(this.currentHp - damage);
+        return false;
     }
 }

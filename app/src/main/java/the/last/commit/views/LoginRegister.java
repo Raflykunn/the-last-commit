@@ -5,63 +5,62 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import the.last.commit.controllers.LoginRegisterController;
+import the.last.commit.utils.SoundAndAnimationHelper;
 
 
 public class LoginRegister {
 
-    private Stage stage;
     private LoginRegisterController controller;
 
     private TextField loginUsernameField;
     private PasswordField loginPasswordField;
+    private VBox loginMessageBox;
     private Label loginMessageLabel;
-    private Button loginButton;
 
     private TextField registerUsernameField;
     private PasswordField registerPasswordField;
     private PasswordField registerConfirmPasswordField;
+    private VBox registerMessageBox;
     private Label registerMessageLabel;
-    private Button registerButton;
 
     public LoginRegister(Stage stage) {
-        this.stage = stage;
         this.controller = new LoginRegisterController(this, stage);
     }
 
     public Scene createScene() {
         BorderPane root = new BorderPane();
-        root.setStyle("-fx-background-color: #1a1a2e;");
+        root.getStyleClass().add("root");
 
         Label titleLabel = new Label("THE LAST COMMIT");
-        titleLabel.setFont(Font.font("Monospace", FontWeight.BOLD, 28));
-        titleLabel.setTextFill(Color.web("#e94560"));
+        titleLabel.getStyleClass().add("title-game");
         titleLabel.setPadding(new Insets(30, 0, 10, 0));
 
         Label subtitleLabel = new Label("Selesaikan deadline-mu atau game over.");
-        subtitleLabel.setFont(Font.font("Monospace", 12));
-        subtitleLabel.setTextFill(Color.web("#a0a0b0"));
+        subtitleLabel.getStyleClass().add("subtitle-label");
 
         VBox header = new VBox(5, titleLabel, subtitleLabel);
         header.setAlignment(Pos.CENTER);
 
         TabPane tabPane = new TabPane();
         tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
-        tabPane.setStyle("""
-            -fx-background-color: transparent;
-            -fx-tab-min-width: 120px;
-        """);
+        tabPane.getStyleClass().add("tab-pane");
 
-        Tab loginTab = new Tab("  LOGIN  ", createLoginPane());
-        Tab registerTab = new Tab("  REGISTER  ", createRegisterPane());
+        Tab loginTab = new Tab("LOGIN");
+        loginTab.setContent(createLoginPane());
+
+        Tab registerTab = new Tab("REGISTER");
+        registerTab.setContent(createRegisterPane());
 
         tabPane.getTabs().addAll(loginTab, registerTab);
 
-        VBox center = new VBox(20, header, tabPane);
+        Button closeAppButton = new Button("KELUAR GAME");
+        closeAppButton.getStyleClass().addAll("rpg-button-red");
+        closeAppButton.setMaxWidth(Double.MAX_VALUE);
+        closeAppButton.setOnAction(e -> System.exit(0));
+
+        VBox center = new VBox(20, header, tabPane, closeAppButton);
         center.setAlignment(Pos.CENTER);
         center.setMaxWidth(450);
         center.setPadding(new Insets(20));
@@ -69,25 +68,46 @@ public class LoginRegister {
         root.setCenter(center);
         BorderPane.setAlignment(center, Pos.CENTER);
 
-        return new Scene(root, 600, 550);
+        Scene scene = new Scene(root, 1024, 680);
+        if (getClass().getResource("/style.css") != null) {
+            scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
+        }
+
+
+        SoundAndAnimationHelper.addClickSoundToAllButtons(root);
+
+        return scene;
+    }
+
+
+    private VBox createCalloutBox(Label label) {
+        VBox box = new VBox(label);
+        box.getStyleClass().add("message-callout");
+        box.setVisible(false);
+        box.setManaged(false);
+        box.setMaxWidth(Double.MAX_VALUE);
+        return box;
     }
 
 
     private VBox createLoginPane() {
         VBox pane = new VBox(15);
-        pane.setPadding(new Insets(30, 40, 30, 40));
+        pane.setPadding(new Insets(40, 40, 40, 40));
         pane.setAlignment(Pos.CENTER_LEFT);
-        pane.setStyle("-fx-background-color: #16213e;");
+        pane.getStyleClass().add("panel");
 
         loginUsernameField = createTextField("Username");
         loginPasswordField = createPasswordField("Password");
 
         loginMessageLabel = new Label("");
-        loginMessageLabel.setFont(Font.font("Monospace", 12));
         loginMessageLabel.setWrapText(true);
+        loginMessageLabel.getStyleClass().add("stat-label");
+        loginMessageLabel.setStyle("-fx-font-size: 13px;");
 
-        loginButton = new Button("LOGIN");
-        styleButton(loginButton, "#e94560");
+        loginMessageBox = createCalloutBox(loginMessageLabel);
+
+        Button loginButton = new Button("LOGIN");
+        loginButton.getStyleClass().addAll("button", "rpg-button");
         loginButton.setMaxWidth(Double.MAX_VALUE);
         loginButton.setOnAction(e -> controller.handleLogin());
 
@@ -99,7 +119,7 @@ public class LoginRegister {
             loginUsernameField,
             createFieldLabel("PASSWORD"),
             loginPasswordField,
-            loginMessageLabel,
+            loginMessageBox,
             loginButton
         );
 
@@ -111,18 +131,21 @@ public class LoginRegister {
         VBox pane = new VBox(15);
         pane.setPadding(new Insets(30, 40, 30, 40));
         pane.setAlignment(Pos.CENTER_LEFT);
-        pane.setStyle("-fx-background-color: #16213e;");
+        pane.getStyleClass().add("panel");
 
         registerUsernameField = createTextField("Username (min. 3 karakter)");
         registerPasswordField = createPasswordField("Password (min. 6 karakter)");
         registerConfirmPasswordField = createPasswordField("Konfirmasi Password");
 
         registerMessageLabel = new Label("");
-        registerMessageLabel.setFont(Font.font("Monospace", 12));
         registerMessageLabel.setWrapText(true);
+        registerMessageLabel.getStyleClass().add("stat-label");
+        registerMessageLabel.setStyle("-fx-font-size: 13px;");
 
-        registerButton = new Button("DAFTAR SEKARANG");
-        styleButton(registerButton, "#0f3460");
+        registerMessageBox = createCalloutBox(registerMessageLabel);
+
+        Button registerButton = new Button("DAFTAR SEKARANG");
+        registerButton.getStyleClass().addAll("button", "rpg-button");
         registerButton.setMaxWidth(Double.MAX_VALUE);
         registerButton.setOnAction(e -> controller.handleRegister());
 
@@ -135,7 +158,7 @@ public class LoginRegister {
             registerPasswordField,
             createFieldLabel("KONFIRMASI PASSWORD"),
             registerConfirmPasswordField,
-            registerMessageLabel,
+            registerMessageBox,
             registerButton
         );
 
@@ -146,68 +169,23 @@ public class LoginRegister {
     private TextField createTextField(String prompt) {
         TextField field = new TextField();
         field.setPromptText(prompt);
-        styleInputField(field);
+        field.getStyleClass().add("text-input");
+        field.setPrefHeight(45);
         return field;
     }
 
     private PasswordField createPasswordField(String prompt) {
         PasswordField field = new PasswordField();
         field.setPromptText(prompt);
-        styleInputField(field);
+        field.getStyleClass().add("text-input");
+        field.setPrefHeight(45);
         return field;
-    }
-
-    private void styleInputField(Control field) {
-        field.setStyle("""
-            -fx-background-color: #0f3460;
-            -fx-text-fill: #ffffff;
-            -fx-prompt-text-fill: #6a6a8a;
-            -fx-border-color: #e94560;
-            -fx-border-width: 1px;
-            -fx-font-family: Monospace;
-            -fx-font-size: 13px;
-            -fx-padding: 8px;
-        """);
-        field.setPrefHeight(38);
     }
 
     private Label createFieldLabel(String text) {
         Label label = new Label(text);
-        label.setFont(Font.font("Monospace", FontWeight.BOLD, 11));
-        label.setTextFill(Color.web("#a0a0b0"));
+        label.getStyleClass().add("subtitle-label");
         return label;
-    }
-
-    private void styleButton(Button btn, String color) {
-        btn.setStyle(String.format("""
-            -fx-background-color: %s;
-            -fx-text-fill: white;
-            -fx-font-family: Monospace;
-            -fx-font-size: 13px;
-            -fx-font-weight: bold;
-            -fx-padding: 10px;
-            -fx-cursor: hand;
-        """, color));
-
-        btn.setOnMouseEntered(e -> btn.setStyle(String.format("""
-            -fx-background-color: derive(%s, 20%%);
-            -fx-text-fill: white;
-            -fx-font-family: Monospace;
-            -fx-font-size: 13px;
-            -fx-font-weight: bold;
-            -fx-padding: 10px;
-            -fx-cursor: hand;
-        """, color)));
-
-        btn.setOnMouseExited(e -> btn.setStyle(String.format("""
-            -fx-background-color: %s;
-            -fx-text-fill: white;
-            -fx-font-family: Monospace;
-            -fx-font-size: 13px;
-            -fx-font-weight: bold;
-            -fx-padding: 10px;
-            -fx-cursor: hand;
-        """, color)));
     }
 
 
@@ -218,13 +196,43 @@ public class LoginRegister {
     public String getRegisterConfirmPassword() { return registerConfirmPasswordField.getText(); }
 
     public void setLoginMessage(String msg, boolean isError) {
+        if (msg == null || msg.trim().isEmpty()) {
+            loginMessageBox.setVisible(false);
+            loginMessageBox.setManaged(false);
+            return;
+        }
+
         loginMessageLabel.setText(msg);
-        loginMessageLabel.setTextFill(isError ? Color.web("#e94560") : Color.web("#4ecca3"));
+        loginMessageBox.getStyleClass().removeAll("message-callout-error", "message-callout-success");
+        if (isError) {
+            loginMessageBox.getStyleClass().add("message-callout-error");
+            SoundAndAnimationHelper.playErrorSound();
+            SoundAndAnimationHelper.shakeNode(loginMessageBox);
+        } else {
+            loginMessageBox.getStyleClass().add("message-callout-success");
+        }
+        loginMessageBox.setVisible(true);
+        loginMessageBox.setManaged(true);
     }
 
     public void setRegisterMessage(String msg, boolean isError) {
+        if (msg == null || msg.trim().isEmpty()) {
+            registerMessageBox.setVisible(false);
+            registerMessageBox.setManaged(false);
+            return;
+        }
+
         registerMessageLabel.setText(msg);
-        registerMessageLabel.setTextFill(isError ? Color.web("#e94560") : Color.web("#4ecca3"));
+        registerMessageBox.getStyleClass().removeAll("message-callout-error", "message-callout-success");
+        if (isError) {
+            registerMessageBox.getStyleClass().add("message-callout-error");
+            SoundAndAnimationHelper.playErrorSound();
+            SoundAndAnimationHelper.shakeNode(registerMessageBox);
+        } else {
+            registerMessageBox.getStyleClass().add("message-callout-success");
+        }
+        registerMessageBox.setVisible(true);
+        registerMessageBox.setManaged(true);
     }
 
     public void clearLoginFields() {
